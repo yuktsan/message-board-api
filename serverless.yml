@@ -66,6 +66,13 @@ functions:
           method: get
           cors: true
           path: /v1/users
+  getUserBoards:
+    handler: src/functions/getUserBoards.getUserBoards
+    events:
+      - http:
+          method: post
+          cors: true
+          path: /v1/users/{userId}/messages
   createMessageBoard:
     handler: src/functions/createMessageBoard.createMessageBoard
     events:
