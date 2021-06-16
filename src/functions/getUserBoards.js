@@ -27,7 +27,7 @@ module.exports.getUserBoards = async (event, context) => {
       body: JSON.stringify({results})
     }
   } catch(error) {
-    console.log('User payload', payload);
+    console.log('Payload', payload);
     return new Error('There was an error in getUserBoards' , error);
   }
 

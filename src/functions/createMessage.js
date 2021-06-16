@@ -19,7 +19,10 @@ module.exports.createMessage = async (event, context) => {
     ReturnValues: 'ALL_NEW',
     UpdateExpression: 'set #messages = list_append(if_not_exists(#messages,:empty_list), :newMessage)',
     ExpressionAttributeNames: {
-      '#messages': [newMessage],
+      '#messages': 'messages'
+    },
+    ExpressionAttributeValues: {
+      ':newMessage': [newMessage],
       ':empty_list': []
     }
   };
@@ -35,7 +38,7 @@ module.exports.createMessage = async (event, context) => {
       }
     }
   } catch(error) {
-    console.log('Message board payload', payload);
+    console.log('Payload', payload);
     return new Error('There was an error in createMessage' , error);
   }
 

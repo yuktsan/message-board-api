@@ -30,7 +30,7 @@ module.exports.createUser = async (event, context) => {
       }
     }
   } catch(error) {
-    console.log('User payload', payload);
+    console.log('Payload', payload);
     return new Error('There was an error in createUser' , error);
   }
 

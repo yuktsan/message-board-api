@@ -28,7 +28,7 @@ module.exports.createMessageBoard = async (event, context) => {
       }
     }
   } catch(error) {
-    console.log('Message board payload', payload);
+    console.log('Payload', payload);
     return new Error('There was an error in createMessageBoard' , error);
   }
 

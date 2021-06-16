@@ -35,7 +35,7 @@ module.exports.getUserMessages = async (event, context) => {
       body: JSON.stringify({results:filterResults})
     }
   } catch(error) {
-    console.log('User payload', payload);
+    console.log('Payload', payload);
     return new Error('There was an error in getUserMessages' , error);
   }
 
