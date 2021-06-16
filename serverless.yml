@@ -37,6 +37,7 @@ provider:
         - "dynamodb:Scan"
         - "dynamodb:GetItem"
         - "dynamodb:PutItem"
+        - "dynamodb:Update*"
       Resource:
         - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/${self:custom.dynamodb.users}
         - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/${self:custom.dynamodb.users}/index/pk
@@ -68,6 +69,7 @@ functions:
           path: /v1/users
   getUserBoards:
     handler: src/functions/getUserBoards.getUserBoards
+    description: List all user boards
     events:
       - http:
           method: get
@@ -75,6 +77,7 @@ functions:
           path: /v1/users/{userId}/boards
   getUserMessages:
     handler: src/functions/getUserMessages.getUserMessages
+    description: List all user messages
     events:
       - http:
           method: post
@@ -82,12 +85,28 @@ functions:
           path: /v1/users/{userId}/messages
   createMessageBoard:
     handler: src/functions/createMessageBoard.createMessageBoard
+    description: Create a message board
     events:
       - http:
           method: post
           cors: true
           path: /v1/message-boards
-
+  getBoards:
+    handler: src/functions/getBoards.getBoards
+    description: List all message boards
+    events:
+      - http:
+          method: get
+          cors: true
+          path: /v1/message-boards
+  createMessage:
+    handler: src/functions/createMessage.createMessage
+    description: Create a message to a board
+    events:
+      - http:
+          method: post
+          cors: true
+          path: /v1/message-boards/{boardId}/message
 # you can define service wide environment variables here
 plugins:
   - serverless-pseudo-parameters
