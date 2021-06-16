@@ -34,24 +34,45 @@ provider:
     - Effect: Allow
       Action:
         - "dynamodb:Query"
+        - "dynamodb:Scan"
+        - "dynamodb:GetItem"
         - "dynamodb:PutItem"
       Resource:
         - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/${self:custom.dynamodb.users}
         - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/${self:custom.dynamodb.users}/index/pk
+        - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/${self:custom.dynamodb.messageBoards}
+        - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/${self:custom.dynamodb.messageBoards}/index/pk
 
 
 # you can define service wide environment variables here
   environment:
-    DYNAMODB_USERS_TABLE: ${self:custom.dynamodb.users}
+    DYNAMODB_MESSAGE_BOARD_USERS_TABLE: ${self:custom.dynamodb.users}
+    DYNAMODB_MESSAGE_BOARD_TABLE: ${self:custom.dynamodb.messageBoards}
 
 functions:
   createUser:
     handler: src/functions/createUser.createUser
+    description: Create a new user
     events:
       - http:
           method: post
           cors: true
-          path: /v1/user
+          path: /v1/users
+  getUsers:
+    handler: src/functions/getUsers.getUsers
+    description: List all users
+    events:
+      - http:
+          method: get
+          cors: true
+          path: /v1/users
+  createMessageBoard:
+    handler: src/functions/createMessageBoard.createMessageBoard
+    events:
+      - http:
+          method: post
+          cors: true
+          path: /v1/message-boards
 
 # you can define service wide environment variables here
 plugins:
@@ -59,13 +80,25 @@ plugins:
   - serverless-mocha
 custom:
   dynamodb:
-    users: ${self:service}-users-${self:provider.stage}
+    users: users-${self:provider.stage}
+    messageBoards: message-boards-${self:provider.stage}
 resources:
   Resources:
     users:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.dynamodb.users}
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    messageBoards:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.dynamodb.messageBoards}
         AttributeDefinitions:
           - AttributeName: pk
             AttributeType: S

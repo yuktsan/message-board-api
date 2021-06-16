@@ -4,16 +4,14 @@ const moment = require('moment');
 const { v4: uuidv4 } = require('uuid');
 
 
-module.exports.createUser = async (event, context) => {
+module.exports.createMessageBoard = async (event, context) => {
   const body = JSON.parse(event.body);
-  const userId = uuidv4();
+  const boardId = uuidv4();
   const name = body.name;
-  const email = body.email;
   const payload = {
-    TableName: process.env.DYNAMODB_MESSAGE_BOARD_USERS_TABLE,
+    TableName: process.env.DYNAMODB_MESSAGE_BOARD_TABLE,
     Item: {
-      pk: userId,
-      email,
+      pk: boardId,
       name,
       createdAt: moment().unix()
     }
@@ -30,8 +28,8 @@ module.exports.createUser = async (event, context) => {
       }
     }
   } catch(error) {
-    console.log('User payload', payload);
-    return new Error('There was an error in createUser' , error);
+    console.log('Message board payload', payload);
+    return new Error('There was an error in createMessageBoard' , error);
   }
 
 
