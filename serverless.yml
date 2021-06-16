@@ -70,6 +70,13 @@ functions:
     handler: src/functions/getUserBoards.getUserBoards
     events:
       - http:
+          method: get
+          cors: true
+          path: /v1/users/{userId}/boards
+  getUserMessages:
+    handler: src/functions/getUserMessages.getUserMessages
+    events:
+      - http:
           method: post
           cors: true
           path: /v1/users/{userId}/messages
