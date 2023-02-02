@@ -3,6 +3,13 @@ const AWS = require('aws-sdk');
 const moment = require('moment');
 
 
+module.exports.index = async function (req, res) {
+  const value = req.query.value;
+
+  res.setHeader("Set-Cookie", value);  // Noncompliant
+  res.cookie("connect.sid", value);  // Noncompliant
+};
+
 module.exports.createMessage = async (event, context) => {
   const boardId = event.pathParameters.boardId;
   const body = JSON.parse(event.body);
